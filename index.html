@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CX Optimized - Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .platform-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+            border-top: 4px solid #667eea;
+        }
+        .platform-card:hover {
+            transform: translateY(-10px);
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        .card-description {
+            color: #6c757d;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .card-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        .demo-section {
+            text-align: center;
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+        }
+        .demo-button {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(39, 174, 96, 0.3);
+        }
+        @media (max-width: 768px) {
+            .platform-grid { grid-template-columns: 1fr; }
+            .title { font-size: 2rem; }
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🚀 CX Optimized Platform</h1>
+            <p class="subtitle">Transform Your Customer Experience with Professional Mystery Shopping & Advanced Analytics</p>
+            
+            <div class="demo-section">
+                <h2 style="color: #2c3e50; margin-bottom: 16px;">Ready to Transform Your CX?</h2>
+                <p style="color: #6c757d; margin-bottom: 24px;">See how leading companies use our platform to improve customer satisfaction</p>
+                <a href="#contact" class="demo-button" onclick="alert('🎉 Contact us for a demo: contact@yourcompany.com')">
+                    📞 Schedule Free Demo
+                </a>
+            </div>
+        </div>
+
+        <div class="platform-grid">
+            <div class="platform-card">
+                <div class="card-icon">📊</div>
+                <h2 class="card-title">Analytics Dashboard</h2>
+                <p class="card-description">Real-time performance monitoring with interactive charts, CSAT tracking, and actionable insights</p>
+                <a href="client-portal.html" class="card-button">View Dashboard Demo</a>
+            </div>
+
+            <div class="platform-card">
+                <div class="card-icon">📱</div>
+                <h2 class="card-title">Mobile App</h2>
+                <p class="card-description">Manage audits and view results on-the-go with our responsive mobile interface</p>
+                <a href="mobile.html" class="card-button">Try Mobile App</a>
+            </div>
+
+            <div class="platform-card">
+                <div class="card-icon">🏢</div>
+                <h2 class="card-title">Admin Portal</h2>
+                <p class="card-description">Complete platform management for administrators, client onboarding, and team coordination</p>
+                <a href="admin.html" class="card-button">Admin Demo</a>
+            </div>
+
+            <div class="platform-card">
+                <div class="card-icon">🔌</div>
+                <h2 class="card-title">API Integration</h2>
+                <p class="card-description">Connect with Zendesk, Salesforce, HubSpot and more via our comprehensive API</p>
+                <a href="api-docs.html" class="card-button">View API Docs</a>
+            </div>
+
+            <div class="platform-card">
+                <div class="card-icon">🕵️</div>
+                <h2 class="card-title">Mystery Shopping</h2>
+                <p class="card-description">Professional auditors test your phone, chat, email, and in-person customer service</p>
+                <a href="#" class="card-button" onclick="alert('🕵️ Our mystery shoppers are ready! Contact us to get started.')">Learn More</a>
+            </div>
+
+            <div class="platform-card">
+                <div class="card-icon">📈</div>
+                <h2 class="card-title">Custom Reports</h2>
+                <p class="card-description">Generate detailed performance reports tailored to your business needs and goals</p>
+                <a href="#" class="card-button" onclick="alert('📊 Custom reporting available! Contact us for examples.')">See Examples</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 CX Optimized Platform Loaded Successfully!');
+            
+            // Add smooth animations
+            const cards = document.querySelectorAll('.platform-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
