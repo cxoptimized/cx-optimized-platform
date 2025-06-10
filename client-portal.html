@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CX Optimized - Client Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .portal-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .portal-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .company-branding {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .company-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .company-info h1 {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .company-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 20px;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .metric-trend {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .trend-positive { color: #27ae60; }
+        .trend-negative { color: #e74c3c; }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(233, 236, 239, 0.5);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-action {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .card-action:hover {
+            background: #667eea;
+            color: white;
+        }
+        .chart-container {
+            height: 300px;
+            margin-top: 16px;
+            position: relative;
+        }
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .location-card {
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .location-card:hover {
+            background: rgba(248, 249, 250, 1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .location-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        .location-score {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        .location-status {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        .audit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .audit-item {
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .audit-item:hover {
+            background: rgba(248, 249, 250, 1);
+            transform: translateX(4px);
+        }
+        .audit-item.completed { border-left-color: #27ae60; }
+        .audit-item.pending { border-left-color: #f39c12; }
+        .audit-item.overdue { border-left-color: #e74c3c; }
+        .audit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .audit-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        .audit-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-completed {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+        .status-overdue {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        .audit-details {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        .audit-score {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .alert-banner {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .alert-icon { font-size: 1.5rem; }
+        .alert-content { flex: 1; }
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #721c24;
+        }
+        .alert-text {
+            font-size: 0.9rem;
+            color: #721c24;
+        }
+        .alert-action {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #721c24;
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .back-link:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .portal-header { flex-direction: column; gap: 16px; text-align: center; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+            .location-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Platform</a>
+    
+    <div class="portal-container">
+        <div class="portal-header">
+            <div class="company-branding">
+                <div class="company-logo">R</div>
+                <div class="company-info">
+                    <h1>RetailMax Corporation</h1>
+                    <p>Enterprise Plan • 24 Locations • Active since Jan 2025</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">JS</div>
+                <div>
+                    <div style="font-weight: 600; color: #2c3e50;">John Smith</div>
+                    <div style="font-size: 0.8rem; color: #6c757d;">CX Manager</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-banner">
+            <div class="alert-icon">🚨</div>
+            <div class="alert-content">
+                <div class="alert-title">Urgent: Downtown Location Performance Alert</div>
+                <div class="alert-text">Customer satisfaction dropped to 3.2/5 - immediate attention required</div>
+            </div>
+            <button class="alert-action" onclick="alert('🔍 Detailed alert analysis coming soon!')">View Details</button>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">87</div>
+                <div class="metric-label">Overall CX Score</div>
+                <div class="metric-trend trend-positive">↗️ +2.3 from last month</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4.6</div>
+                <div class="metric-label">Average CSAT</div>
+                <div class="metric-trend trend-positive">↗️ +0.2 improvement</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">94%</div>
+                <div class="metric-label">Audit Completion</div>
+                <div class="metric-trend trend-positive">↗️ +3% this month</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label">Active Issues</div>
+                <div class="metric-trend trend-negative">↗️ +1 since yesterday</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📊</span> Performance Analytics
+                    </div>
+                    <button class="card-action" onclick="alert('📈 Full analytics dashboard coming soon!')">View Full Report</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🕵️</span> Recent Audits
+                    </div>
+                    <button class="card-action" onclick="alert('📋 All audits view coming soon!')">View All</button>
+                </div>
+                <div class="audit-list">
+                    <div class="audit-item completed" onclick="alert('📄 Audit details: Downtown Phone - Score 89/100')">
+                        <div class="audit-header">
+                            <div class="audit-title">Downtown - Phone Support</div>
+                            <div class="audit-status status-completed">Completed</div>
+                        </div>
+                        <div class="audit-details">June 8, 2025 • Mystery Call</div>
+                        <div class="audit-score">Score: 89/100</div>
+                    </div>
+                    
+                    <div class="audit-item completed" onclick="alert('📄 Audit details: Mall Chat - Score 92/100')">
+                        <div class="audit-header">
+                            <div class="audit-title">Mall - Live Chat</div>
+                            <div class="audit-status status-completed">Completed</div>
+                        </div>
+                        <div class="audit-details">June 7, 2025 • Chat Audit</div>
+                        <div class="audit-score">Score: 92/100</div>
+                    </div>
+                    
+                    <div class="audit-item pending" onclick="alert('📄 Audit in progress: West Side Email - 60% complete')">
+                        <div class="audit-header">
+                            <div class="audit-title">West Side - Email</div>
+                            <div class="audit-status status-pending">In Progress</div>
+                        </div>
+                        <div class="audit-details">Started June 9 • 60% Complete</div>
+                        <div class="audit-score">Est. 2 days remaining</div>
+                    </div>
+                    
+                    <div class="audit-item overdue" onclick="alert('⚠️ Overdue audit: Online Chatbot - needs rescheduling')">
+                        <div class="audit-header">
+                            <div class="audit-title">Online - AI Chatbot</div>
+                            <div class="audit-status status-overdue">Overdue</div>
+                        </div>
+                        <div class="audit-details">Due June 6 • 3 days overdue</div>
+                        <div class="audit-score">Needs Rescheduling</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>📍</span> Location Performance
+                </div>
+                <button class="card-action" onclick="alert('🏢 Location management coming soon!')">Manage Locations</button>
+            </div>
+            <div class="location-grid">
+                <div class="location-card" onclick="alert('📍 Downtown Store Details: Score 89, Above Average')">
+                    <div class="location-name">Downtown Store</div>
+                    <div class="location-score">89</div>
+                    <div class="location-status">Above Average</div>
+                </div>
+                <div class="location-card" onclick="alert('📍 Mall Location Details: Score 92, Excellent')">
+                    <div class="location-name">Mall Location</div>
+                    <div class="location-score">92</div>
+                    <div class="location-status">Excellent</div>
+                </div>
+                <div class="location-card" onclick="alert('📍 West Side Branch Details: Score 76, Needs Improvement')">
+                    <div class="location-name">West Side Branch</div>
+                    <div class="location-score">76</div>
+                    <div class="location-status">Needs Improvement</div>
+                </div>
+                <div class="location-card" onclick="alert('📍 Online Store Details: Score 94, Outstanding')">
+                    <div class="location-name">Online Store</div>
+                    <div class="location-score">94</div>
+                    <div class="location-status">Outstanding</div>
+                </div>
+                <div class="location-card" onclick="alert('📍 Call Center Details: Score 88, Good')">
+                    <div class="location-name">Call Center</div>
+                    <div class="location-score">88</div>
+                    <div class="location-status">Good</div>
+                </div>
+                <div class="location-card" onclick="alert('📍 Email Support Details: Score 91, Excellent')">
+                    <div class="location-name">Email Support</div>
+                    <div class="location-score">91</div>
+                    <div class="location-status">Excellent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let performanceChart;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('👤 CX Client Portal Loaded');
+            initializeChart();
+            
+            // Simulate real-time updates
+            setInterval(updateMetrics, 30000);
+        });
+
+        function initializeChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'CX Score',
+                        data: [82, 85, 84, 86, 88, 87],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(233, 236, 239, 0.5)' },
+                            ticks: { color: '#6c757d' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(233, 236, 239, 0.5)' },
+                            ticks: { color: '#6c757d' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMetrics() {
+            // Simulate real-time data changes
+            const metrics = document.querySelectorAll('.metric-value');
+            metrics.forEach(metric => {
+                metric.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    metric.style.transform = 'scale(1)';
+                }, 200);
+            });
+        }
+    </script>
+</body>
+</html>
