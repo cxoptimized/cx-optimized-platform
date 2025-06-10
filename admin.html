@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CX Optimized - Admin Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+        .logo-section {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-menu { list-style: none; }
+        .nav-item { margin-bottom: 4px; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #6c757d;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(4px);
+        }
+        .nav-icon { font-size: 1.2rem; width: 20px; text-align: center; }
+        .main-content {
+            background: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .stat-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .stat-icon { font-size: 1.5rem; opacity: 0.7; }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+        }
+        .change-positive { color: #27ae60; }
+        .change-negative { color: #e74c3c; }
+        .main-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        .client-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .client-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .client-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f8f9fa;
+            vertical-align: middle;
+        }
+        .client-table tr:hover { background: #f8f9fa; }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+        .status-trial {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+        .plan-badge {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .plan-pro {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        .plan-enterprise {
+            background: rgba(142, 68, 173, 0.1);
+            color: #8e44ad;
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 1024px) {
+            .admin-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Platform</a>
+    
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="admin-logo">🏢 CX Admin</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            Client Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">💳</span>
+                            Billing & Plans
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">🕵️</span>
+                            Audit Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">🔌</span>
+                            Integrations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <p class="page-subtitle">Manage your CX Optimized platform and clients</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Total Clients</span>
+                        <span class="stat-icon">👥</span>
+                    </div>
+                    <div class="stat-value">247</div>
+                    <div class="stat-change change-positive">
+                        ↗️ +12 this month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Monthly Revenue</span>
+                        <span class="stat-icon">💰</span>
+                    </div>
+                    <div class="stat-value">$89,420</div>
+                    <div class="stat-change change-positive">
+                        ↗️ +18.5% vs last month
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Active Audits</span>
+                        <span class="stat-icon">🕵️</span>
+                    </div>
+                    <div class="stat-value">1,847</div>
+                    <div class="stat-change change-positive">
+                        ↗️ +234 this week
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Platform Uptime</span>
+                        <span class="stat-icon">⚡</span>
+                    </div>
+                    <div class="stat-value">99.8%</div>
+                    <div class="stat-change change-positive">
+                        ↗️ Excellent
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Recent Clients</h2>
+                    <button class="btn btn-primary" onclick="alert('🆕 Add client feature coming soon!')">
+                        ➕ Add Client
+                    </button>
+                </div>
+                <table class="client-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Revenue</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RetailMax Corp</strong><br><small>admin@retailmax.com</small></td>
+                            <td><span class="plan-badge plan-enterprise">Enterprise</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>$2,850/mo</td>
+                            <td><button class="btn btn-primary" onclick="alert('👁️ Client details coming soon!')">View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TechStart Solutions</strong><br><small>contact@techstart.io</small></td>
+                            <td><span class="plan-badge plan-pro">Pro</span></td>
+                            <td><span class="status-badge status-trial">Trial</span></td>
+                            <td>$0/mo</td>
+                            <td><button class="btn btn-primary" onclick="alert('🔄 Convert to paid coming soon!')">Convert</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>FinanceFirst Bank</strong><br><small>it@financefirst.com</small></td>
+                            <td><span class="plan-badge plan-pro">Pro</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>$485/mo</td>
+                            <td><button class="btn btn-primary" onclick="alert('📊 Analytics coming soon!')">Analytics</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="main-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Quick Actions</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <button class="btn btn-primary" onclick="alert('📊 Platform analytics coming soon!')" style="padding: 20px; justify-content: center;">
+                        📊 View Platform Analytics
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('🕵️ Audit management coming soon!')" style="padding: 20px; justify-content: center;">
+                        🕵️ Manage Audits
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('💳 Billing dashboard coming soon!')" style="padding: 20px; justify-content: center;">
+                        💳 Billing Dashboard
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('🔧 System settings coming soon!')" style="padding: 20px; justify-content: center;">
+                        ⚙️ System Settings
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏢 CX Admin Panel Loaded');
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                const revenue = document.querySelector('.stat-value');
+                revenue.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    revenue.style.transform = 'scale(1)';
+                }, 300);
+            }, 45000);
+        });
+    </script>
+</body>
+</html>
